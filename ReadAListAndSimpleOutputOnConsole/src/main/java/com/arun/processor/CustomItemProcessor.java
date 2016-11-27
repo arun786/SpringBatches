@@ -1,0 +1,20 @@
+package com.arun.processor;
+
+import org.springframework.batch.item.ItemProcessor;
+
+public class CustomItemProcessor implements ItemProcessor<String, String>{
+
+	public String process(String item) throws Exception {
+		String player = "Player Name " + item + " Country - ";
+		if("Sachin Tendulkar".equalsIgnoreCase(item) || "Rahul Dravid".equalsIgnoreCase(item) || "Sourav Ganguly".equalsIgnoreCase(item)) {
+			player += " India";
+		}else if ("Brian Lara".equalsIgnoreCase(item)){
+			player += "West Indies";
+		}else if("Mark Waugh".equalsIgnoreCase(item) || "Steven Waugh".equalsIgnoreCase(item)){
+			player += "Australia";
+		}else if("Shane Bond".equalsIgnoreCase(item)){
+			player +="Newzealand";
+		}
+		return player;
+	}
+}

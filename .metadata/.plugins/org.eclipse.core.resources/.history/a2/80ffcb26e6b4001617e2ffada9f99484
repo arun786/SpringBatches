@@ -1,0 +1,5 @@
+package com.arun.reader;
+
+public class CustomItemReader {
+
+}

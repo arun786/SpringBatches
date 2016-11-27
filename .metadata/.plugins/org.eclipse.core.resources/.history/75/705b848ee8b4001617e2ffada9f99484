@@ -1,0 +1,12 @@
+package com.arun.processor;
+
+import org.springframework.batch.item.ItemProcessor;
+
+public class CustomItemProcessor implements ItemProcessor<String, String>{
+
+	public String process(String item) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}
