@@ -1,0 +1,13 @@
+package com.arun.processor;
+
+import org.springframework.batch.item.ItemProcessor;
+
+import com.arun.bean.Cricketer;
+
+public class CustomItemProcessor implements ItemProcessor<Cricketer, Cricketer>{
+
+	public Cricketer process(Cricketer item) throws Exception {
+		return null;
+	}
+
+}

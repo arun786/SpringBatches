@@ -1,0 +1,32 @@
+package com.arun.bean;
+
+public class Cricketer {
+	private String name;
+	private String country;
+	private double runs;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getCountry() {
+		return country;
+	}
+
+	public void setCountry(String country) {
+		this.country = country;
+	}
+
+	public double getRuns() {
+		return runs;
+	}
+
+	public void setRuns(double runs) {
+		this.runs = runs;
+	}
+
+}
