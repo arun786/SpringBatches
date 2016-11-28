@@ -1,11 +1,16 @@
 package com.arun.beans;
 
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+
+@XmlRootElement(name="cricket")
 public class Cricketer {
 	private String name;
 	private String country;
 	private Double score;
 	private String grade;
 
+	@XmlElement(name="playerName")
 	public String getName() {
 		return name;
 	}
@@ -14,6 +19,7 @@ public class Cricketer {
 		this.name = name;
 	}
 
+	@XmlElement(name="country")
 	public String getCountry() {
 		return country;
 	}
@@ -22,6 +28,7 @@ public class Cricketer {
 		this.country = country;
 	}
 
+	@XmlElement(name="score")
 	public Double getScore() {
 		return score;
 	}
@@ -30,6 +37,7 @@ public class Cricketer {
 		this.score = score;
 	}
 
+	@XmlElement(name="grade")
 	public String getGrade() {
 		return grade;
 	}

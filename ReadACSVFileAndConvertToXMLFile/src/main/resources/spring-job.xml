@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+	<import resource="application-context.xml" />
+
+	<!-- Read the csv file line by line -->
+	<bean id="itemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+		<property name="resource" value="classpath:Cricketers.csv"></property>
+		<property name="lineMapper">
+			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+				<property name="fieldSetMapper">
+					<bean class="com.arun.reader.CricketerMapper"></bean>
+				</property>
+				<property name="lineTokenizer">
+					<bean
+						class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+						<property name="delimiter" value=","></property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- Process the csv file line by line -->
+	<bean id="itemProcessor" class="com.arun.processor.CricketerProcessor"></bean>
+
+	<!-- Convert the processed file into xml file -->
+	<bean id="itemWriter" class="org.springframework.batch.item.xml.StaxEventItemWriter">
+		<property name="resource" value="file:xml/Cricketer.xml"></property>
+		<property name="rootTagName" value="cricketer"></property>
+		<property name="marshaller">
+			<bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+				<property name="classesToBeBound">
+					<list>
+						<value>com.arun.beans.Cricketer</value>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<batch:job id="cricketJob">
+		<batch:step id="step1">
+			<batch:tasklet transaction-manager="transactionManager">
+				<batch:chunk reader="itemReader" processor="itemProcessor" writer="itemWriter" commit-interval="5"></batch:chunk>
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+
+</beans>
