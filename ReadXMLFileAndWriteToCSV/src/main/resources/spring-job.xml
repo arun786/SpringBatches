@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- step 1 : configuration for transaction manager, jobrepository and joblauncher -->
+	<import resource="application-context.xml" />
+
+	<!-- step 2 : configuration for reading the xml file -->
+	<bean id="reader" class="org.springframework.batch.item.xml.StaxEventItemReader">
+		<property name="resource" value="file:/c:/csv/batch-file-all.xml"></property>
+		<property name="fragmentRootElementName" value="Cricket"></property>
+		<property name="unmarshaller">
+			<bean class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+				<property name="classesToBeBound">
+					<list>
+						<value>com.arun.bean.Cricketer</value>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- <bean id="writer" class="com.arun.writer.CricketerWriter"></bean> -->
+	<bean id="writer" class="org.springframework.batch.item.file.FlatFileItemWriter">
+		<property name="resource" value="file:c:/csv/batch-file-all.csv"></property>
+		<property name="shouldDeleteIfExists" value="true"></property>
+		<property name="lineAggregator">
+			<bean class="org.springframework.batch.item.file.transform.DelimitedLineAggregator">
+				<property name="delimiter" value="|"></property>
+				<property name="fieldExtractor">
+					 <bean class="org.springframework.batch.item.file.transform.BeanWrapperFieldExtractor">
+					 	<property name="names" value="name,country,score,nomatches,average"></property>
+					 </bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<batch:job id="cricketjob">
+		<batch:step id="step1">
+			<batch:tasklet transaction-manager="transaction-manager">
+				<batch:chunk reader="reader" writer="writer"
+					commit-interval="1"></batch:chunk>
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+</beans>
