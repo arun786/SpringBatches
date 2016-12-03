@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<import resource="applicationcontext.xml"/>
+	
+	<bean id="reader" class="org.springframework.batch.item.file.FlatFileItemReader">
+		<property name="resource" value="classpath:csv/cricketer.csv"></property>
+		<property name="lineMapper">
+			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+				<property name="fieldSetMapper"> 
+					<bean class="com.arun.reader.CricketMapper"></bean>
+				</property>
+				<property name="lineTokenizer">
+					<bean class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+						<property name="delimiter" value=","></property>
+						<property name="names" value="name,country,score,nomatches"></property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="processor" class="com.arun.processor.CricketProcessor"></bean>
+	
+	<bean id="writer" class="org.springframework.batch.item.database.JdbcBatchItemWriter">
+		<property name="dataSource"  ref="dataSource"></property>
+		<property name="sql">
+			<value>
+			
+			 <![CDATA[
+            	insert into cricketer(name,country,score,nomatches,average)
+			values (:name, :country, :score, :nomatches, :average)
+            ]]>
+			
+			</value>
+		</property>
+		<property name="itemSqlParameterSourceProvider">
+			<bean class="org.springframework.batch.item.database.BeanPropertyItemSqlParameterSourceProvider"></bean>
+		</property>	
+	</bean>
+	
+	<batch:job id="cricketjob">
+		<batch:step id="step1">
+			<batch:tasklet transaction-manager="transactionManager">
+				<batch:chunk reader="reader" processor="processor" writer="writer" commit-interval="2"></batch:chunk>
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+
+</beans>
