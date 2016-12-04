@@ -1,0 +1,4 @@
+//com.springsource.sts.config.flow.coordinates\:http\://www.springframework.org/schema/batch\:/ReadAnXMLFileAndWriteToMySQL/src/main/resources/applicationcontext.xml=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<graph/>
+//com.springsource.sts.config.flow.coordinates\:http\://www.springframework.org/schema/batch\:/ReadAnXMLFileAndWriteToMySQL/src/main/resources/database.xml=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<graph/>
+//com.springsource.sts.config.flow.coordinates\:http\://www.springframework.org/schema/batch\:/ReadAnXMLFileAndWriteToMySQL/src/main/resources/spring-job.xml=<?xml version\="1.0" encoding\="UTF-8"?>\r\n<graph>\r\n<element clazz\="JobModelElement" type\="job">\r\n<structure end\="1931" endstart\="1919" start\="1655" startend\="1683"/>\r\n<bounds height\="118" width\="134" x\="15" y\="17"/>\r\n</element>\r\n</graph>
+eclipse.preferences.version=1
