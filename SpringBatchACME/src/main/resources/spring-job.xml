@@ -33,9 +33,8 @@
 	<batch:job id="productJob">
 		<batch:step id="step1">
 			<batch:tasklet transaction-manager="transactionManager">
-				<batch:chunk reader="reader" writer="writer" commit-interval="1"></batch:chunk>
+				<batch:chunk reader="reader" writer="writer" commit-interval="100"></batch:chunk>
 			</batch:tasklet>
 		</batch:step>
 	</batch:job>
-
 </beans>
