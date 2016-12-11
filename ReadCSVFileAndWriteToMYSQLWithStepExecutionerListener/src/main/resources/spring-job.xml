@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:batch="http://www.springframework.org/schema/batch"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd">
+
+	<import resource="spring-repos.xml" />
+
+	<bean id="reader" class="org.springframework.batch.item.file.FlatFileItemReader">
+		<property name="resource" value="classpath:csv/product.csv"></property>
+		<property name="linesToSkip" value="1"></property>
+		<property name="lineMapper">
+			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+				<property name="fieldSetMapper">
+					<bean class="com.arun.reader.ProductFieldSetMapper"></bean>
+				</property>
+				<property name="lineTokenizer">
+					<bean
+						class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+						<property name="delimiter" value=","></property>
+						<property name="names" value="id,name,description,price"></property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="writer" class="com.arun.writer.MYSQLWriter">
+		<constructor-arg ref="dataSource"></constructor-arg>
+	</bean>
+	<bean id="stepExecutionerListener" class="com.arun.listener.ProductStepExecutionListener"></bean>
+
+	<batch:job id="productJob">
+		<batch:step id="step1">
+			<batch:tasklet transaction-manager="transactionManager">
+				<batch:chunk reader="reader" writer="writer"
+					commit-interval="5"></batch:chunk>
+				<batch:listeners>
+					<batch:listener ref="stepExecutionerListener"></batch:listener>
+				</batch:listeners>
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+</beans>
