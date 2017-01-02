@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:batch="http://www.springframework.org/schema/batch"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/batch http://www.springframework.org/schema/batch/spring-batch.xsd
+		http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<import resource="batchcore.xml" />
+
+	<bean id="itemReader" class="org.springframework.batch.item.file.FlatFileItemReader">
+		<property name="resource" value="file:/c:/csv/employee.txt"></property>
+		<property name="linesToSkip" value="1"></property>
+		<property name="lineMapper">
+			<bean class="org.springframework.batch.item.file.mapping.DefaultLineMapper">
+				<property name="fieldSetMapper">
+					<bean class="com.arun.mapper.EmployeeFieldSetMapper"></bean>
+				</property>
+				<property name="lineTokenizer">
+					<bean
+						class="org.springframework.batch.item.file.transform.DelimitedLineTokenizer">
+						<property name="delimiter" value=","></property>
+						<property name="names" value="id,name,salary"></property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="itemProcessor" class="com.arun.processor.EmployeeItemProcessor" />
+
+	<bean id="itemWriter" class="com.arun.writer.MySQLWriter">
+		<constructor-arg ref="dataSource"></constructor-arg>
+	</bean>
+
+	<batch:job id="employeeJob">
+		<batch:step id="step1">
+			<batch:tasklet transaction-manager="transactionManager">
+				<batch:chunk reader="itemReader" processor="itemProcessor"
+					writer="itemWriter" commit-interval="2"></batch:chunk>
+			</batch:tasklet>
+		</batch:step>
+	</batch:job>
+
+	<!-- Scheduler -->
+
+	<bean id="scheduler" class="com.arun.schedule.JobScheduler">
+		<property name="job" ref="employeeJob"></property>
+		<property name="jobLauncher" ref="jobLauncher"></property>
+	</bean>
+	
+	<task:scheduled-tasks>
+		<task:scheduled ref="scheduler" method="run" cron="0/30 * * * * ?"/>
+	</task:scheduled-tasks>
+
+</beans>
