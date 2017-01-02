@@ -2,7 +2,7 @@ package com.arun.processor;
 
 import org.springframework.batch.item.ItemProcessor;
 
-import com.amex.bean.Employee;
+import com.arun.bean.Employee;
 
 public class EmployeeItemProcessor implements ItemProcessor<Employee, Employee> {
 

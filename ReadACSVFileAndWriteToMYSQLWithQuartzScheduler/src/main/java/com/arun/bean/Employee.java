@@ -1,4 +1,4 @@
-package com.amex.bean;
+package com.arun.bean;
 
 public class Employee {
 	private String id;

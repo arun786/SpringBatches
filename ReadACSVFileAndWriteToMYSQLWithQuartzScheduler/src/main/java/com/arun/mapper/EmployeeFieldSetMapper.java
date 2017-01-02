@@ -4,7 +4,7 @@ import org.springframework.batch.item.file.mapping.FieldSetMapper;
 import org.springframework.batch.item.file.transform.FieldSet;
 import org.springframework.validation.BindException;
 
-import com.amex.bean.Employee;
+import com.arun.bean.Employee;
 
 public class EmployeeFieldSetMapper implements FieldSetMapper<Employee> {
 

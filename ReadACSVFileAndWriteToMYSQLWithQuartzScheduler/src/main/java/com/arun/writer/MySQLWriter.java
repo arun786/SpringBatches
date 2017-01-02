@@ -7,7 +7,7 @@ import javax.sql.DataSource;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-import com.amex.bean.Employee;
+import com.arun.bean.Employee;
 
 public class MySQLWriter implements ItemWriter<Employee> {
 
